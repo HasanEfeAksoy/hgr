@@ -9,6 +9,10 @@
 #include <cmath>
 #endif
 
+#ifndef _ARRAY_
+#include <array>
+#endif
+
 #ifndef _WINDOWS_
 #include <windows.h>
 #endif
@@ -45,11 +49,34 @@ namespace hgr {
     
 
 
-
-
+    void drawWindow(int width, int height, const char* title, int r, int g, int b, void (*updateFunc)());
+    void clearWindow();
+    void drawPixel(int x, int y, int r, int g, int b);
+    void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b);
+    void drawRect(int x, int y, int width, int height, int r, int g, int b);
+    void drawCircle(int x, int y, int radius, bool fill, int r, int g, int b);
+    void drawPolygon(int points[][2], int pointCount, int r, int g, int b);
+    
+    
+    
+    
     //
     // hgr some definitions start
 
+    
+    float mapRange(float value, float a, float b, float c, float d) {
+        value = (value - a) / (b - a);
+        return c + value * (d - c);
+    }
+
+    float distance(float x1, float y1, float x2, float y2) {
+        return std::sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+    }
+    // need null seed
+    float randFloat(float min, float max) {
+        float scale = rand() / (float) RAND_MAX;
+        return min + scale * (max - min);
+    }
 
 
     struct vec2 {
@@ -128,6 +155,8 @@ namespace hgr {
 
         vec3() : x(0), y(0), z(0) {}
         vec3(const vec3& other) : x(other.x), y(other.y), z(other.z) {}
+        vec3(const vec2& other, float z) : x(other.x), y(other.y), z(z) {}
+        vec3(float x, const vec2& other) : x(x), y(other.x), z(other.y) {}
         vec3(float n) : x(n), y(n), z(n) {}
         vec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
@@ -221,20 +250,10 @@ namespace hgr {
     };
 
 
-    float mapRange(float value, float a, float b, float c, float d) {
-        value = (value - a) / (b - a);
-        return c + value * (d - c);
-    }
-
     // hgr some defibitions end
     //
 
 
-
-
-    void clearWindow();
-    void drawWindow(const vec2& size, const char* title, const vec3& color, void (*updateFunc)());
-    void drawPixel(const vec2& position, const vec3& color);
 
 
 
@@ -350,21 +369,21 @@ namespace hgr {
 
     // hgr
 
-    void drawWindow(const vec2& size, const char* title, const vec3& color, void (*updateFunc)()) {
+    void drawWindow(int width, int height, const char* title, int r, int g, int b, void (*updateFunc)()) {
 
         userUpdateFunc  = updateFunc;
         
         DeleteObject(brush);
-        brush = CreateSolidBrush(RGB(color.x, color.y, color.z));
+        brush = CreateSolidBrush(RGB(r, g, b));
         
         memDC = CreateCompatibleDC(NULL);
-        memBitmap = CreateCompatibleBitmap(GetDC(hwnd), size.x, size.y);
+        memBitmap = CreateCompatibleBitmap(GetDC(hwnd), width, height);
         SelectObject(memDC, memBitmap);
 
         hInst = GetModuleHandle(NULL); // Uygulama örneğini al
 
         // Pencere sınıfı adı (ANSI)
-        const char* CLASS_NAME = "MyWindow";
+        const char* CLASS_NAME = "MyWindowClassName";
 
         // Pencere sınıfını tanımla
         WNDCLASSA wc = {};
@@ -385,7 +404,7 @@ namespace hgr {
             title, // Pencere başlığı (ANSI)
             // WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
             WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, size.x, size.y,
+            CW_USEDEFAULT, CW_USEDEFAULT, width, height,
             NULL,
             NULL,
             hInst,
@@ -394,12 +413,12 @@ namespace hgr {
 
         ShowWindow(hwnd, SW_SHOWDEFAULT);
 
-        WIDTH = size.x;
-        HEIGHT = size.y;
+        WIDTH = width;
+        HEIGHT = height;
 
         // Bellek DC oluştur
         memDC = CreateCompatibleDC(NULL);
-        memBitmap = CreateCompatibleBitmap(GetDC(hwnd), size.x, size.y);
+        memBitmap = CreateCompatibleBitmap(GetDC(hwnd), width, height);
         SelectObject(memDC, memBitmap);
         clearWindow();
 
@@ -416,16 +435,14 @@ namespace hgr {
         }
         
         KillTimer(hwnd, 1);
+
+
         if (memBitmap) {
             DeleteObject(memBitmap);
         }
         if (memDC) {
             DeleteDC(memDC);
         }
-    }
-
-    void drawPixel(const vec2& position, const vec3& color) {
-        SetPixel(memDC, position.x, position.y, RGB(color.x, color.y, color.z));
     }
 
     void clearWindow() {
@@ -435,7 +452,89 @@ namespace hgr {
         FillRect(memDC, &rect, brush);
     }
 
+    void drawPixel(int x, int y, int r, int g, int b) {
+        SetPixel(memDC, x, y, RGB(r, g, b));
+    }
 
+    void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b) {
+        int dx = std::abs(x2 - x1);
+        int dy = std::abs(y2 - y1);
+        int sx = (x1 < x2) ? 1 : -1;
+        int sy = (y1 < y2) ? 1 : -1;
+        int err = dx - dy;
+
+        while (true) {
+            drawPixel(x1, y1, r, g, b);
+            if (x1 == x2 && y1 == y2) break;
+            int err2 = err * 2;
+            if (err2 > -dy) { 
+                err -= dy;
+                x1 += sx;
+            }
+            if (err2 < dx) { 
+                err += dx;
+                y1 += sy;
+            }
+        }
+    }
+
+    void drawRect(int x, int y, int width, int height, bool fill, int r, int g, int b) {
+        if (fill) {
+            for (int i = 0; i <= width; i++) {
+                for (int j = 0; j <= height; j++) {
+                    drawPixel(i + x, j + y, r, g, b);
+                }
+            }
+        }
+        else {
+            drawLine(x, y, x + width, y, r, g, b);
+            drawLine(x + width, y, x + width, y + height, r, g, b);
+            drawLine(x + width, y + height, x, y + height, r, g, b);
+            drawLine(x, y + height, x, y, r, g, b);
+        }
+    }
+
+    void drawCircle(int x, int y, int radius, bool fill, int r, int g, int b) {
+        int currentX = radius;
+        int currentY = 0;
+        int decisionOver2 = 1 - currentX;
+
+        while (currentX >= currentY) {
+            drawPixel(x + currentX, y + currentY, r, g, b);
+            drawPixel(x + currentY, y + currentX, r, g, b);
+            drawPixel(x - currentX, y + currentY, r, g, b);
+            drawPixel(x - currentY, y + currentX, r, g, b);
+            drawPixel(x + currentX, y - currentY, r, g, b);
+            drawPixel(x + currentY, y - currentX, r, g, b);
+            drawPixel(x - currentX, y - currentY, r, g, b);
+            drawPixel(x - currentY, y - currentX, r, g, b);
+
+            currentY++;
+
+            if (decisionOver2 <= 0) {
+                decisionOver2 += 2 * currentY + 1;
+            } else {
+                currentX--;
+                decisionOver2 += 2 * (currentY - currentX) + 1;
+            }
+        }
+
+        if (fill) {
+            for (int yFill = 0; yFill <= radius; yFill++) {
+                int xFill = static_cast<int>(sqrt(radius * radius - yFill * yFill));
+                drawLine(x - xFill, y + yFill, x + xFill, y + yFill, r, g, b);
+                drawLine(x - xFill, y - yFill, x + xFill, y - yFill, r, g, b);
+            }
+        }
+    }
+
+    void drawPolygon(int points[][2], int pointCount, int r, int g, int b) {
+        if (pointCount < 2) return;
+
+        for (int i = 0; i < pointCount; ++i) {
+            drawLine(points[i][0], points[i][1], points[(i + 1) % pointCount][0], points[(i + 1) % pointCount][1], r, g, b);
+        }
+    }
 };
 
 
