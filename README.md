@@ -14,7 +14,7 @@ Include: <pre>#include "hgr.h"</pre>
 <br>
 Example: 
 <pre>
-    #include <iostream>
+    #include &lt iostream &gt
     #include "hgr.h"
     <br>
     <br>
