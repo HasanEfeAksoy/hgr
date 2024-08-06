@@ -27,9 +27,8 @@ Example:
       &nbsp &nbsp &nbsp &nbsp return 0;
       <br>
     }
-      <br>
-      <br>
-    
+    <br>
+    <br>
     void update() {
       <br>
       &nbsp &nbsp &nbsp &nbsp hgr::drawPixel(100, 100, 255, 255, 255);
