@@ -22,9 +22,9 @@ Example:
     <br>
     int main() {
       <br>
-      &ensp &ensp &ensp &ensp hgr::drawWindow(400, 400, "HGR (Hasan Graphics) Window", 0, 0, 0, update);
+      &nbsp &nbsp &nbsp &nbsp hgr::drawWindow(400, 400, "HGR (Hasan Graphics) Window", 0, 0, 0, update);
       <br>
-      &ensp &ens p&ensp &ensp return 0;
+      &nbsp &nbsp &nbsp &nbsp return 0;
       <br>
     }
       <br>
@@ -32,7 +32,7 @@ Example:
     
     void update() {
       <br>
-      &ensp &ensp &ensp &ensp hgr::drawPixel(100, 100, 255, 255, 255);
+      &nbsp &nbsp &nbsp &nbsp hgr::drawPixel(100, 100, 255, 255, 255);
       <br>
     }
 </pre>
