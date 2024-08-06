@@ -9,10 +9,6 @@
 #include <cmath>
 #endif
 
-#ifndef _ARRAY_
-#include <array>
-#endif
-
 #ifndef _WINDOWS_
 #include <windows.h>
 #endif
