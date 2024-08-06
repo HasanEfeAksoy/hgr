@@ -9,6 +9,10 @@
 #include <cmath>
 #endif
 
+#ifndef _CTIME_
+#include <ctime>
+#endif
+
 #ifndef _WINDOWS_
 #include <windows.h>
 #endif
@@ -16,6 +20,10 @@
 
 
 #define PI 3.14159265
+#define activeRandomSeed() srand(time(NULL))
+#define deactiveRandomSeed() srand(0)
+    
+
 
 
 namespace hgr {
@@ -26,7 +34,16 @@ namespace hgr {
     HDC memDC;
     HBITMAP memBitmap;
     
-    HBRUSH brush = CreateSolidBrush(RGB(255, 255, 255));
+    int bgR = 255;
+    int bgG = 255;
+    int bgB = 255;
+    HBRUSH brush = CreateSolidBrush(RGB(bgR, bgG, bgB));
+
+    PAINTSTRUCT ps;
+    HDC hdc;
+
+    COLORREF* framebuffer;
+    BITMAPINFO bitmapInfo;
 
 
     // ~60 FPS ile çalışır. değiştirmek isterseniz SetTimer fonksiyonunda millisecond değerini değiştirebilirsiniz. (FPS = 1000/millisecond)
@@ -49,7 +66,7 @@ namespace hgr {
     void clearWindow();
     void drawPixel(int x, int y, int r, int g, int b);
     void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b);
-    void drawRect(int x, int y, int width, int height, int r, int g, int b);
+    void drawRect(int x, int y, int width, int height, bool fill, int r, int g, int b);
     void drawCircle(int x, int y, int radius, bool fill, int r, int g, int b);
     void drawPolygon(int points[][2], int pointCount, int r, int g, int b);
     
@@ -68,7 +85,7 @@ namespace hgr {
     float distance(float x1, float y1, float x2, float y2) {
         return std::sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
     }
-    // need null seed
+
     float randFloat(float min, float max) {
         float scale = rand() / (float) RAND_MAX;
         return min + scale * (max - min);
@@ -264,22 +281,9 @@ namespace hgr {
                 if (memDC) {
                     DeleteDC(memDC);
                 }
+                delete[] framebuffer;
                 PostQuitMessage(0);
                 return 0;
-            // case WM_LBUTTONDOWN: {
-            //     // Tıklanan pikselin rengini kontrol et
-            //     int x = LOWORD(lParam);
-            //     int y = HIWORD(lParam);
-
-            //     HDC hdc = GetDC(hwnd);
-            //     COLORREF color = GetPixel(hdc, x, y);
-            //     ReleaseDC(hwnd, hdc);
-
-            //     // Renk bilgisini konsola yazdır
-            //     printf("Koordinatlar: (%d, %d) - Renk: #%02X%02X%02X\n", x, y,
-            //         GetRValue(color), GetGValue(color), GetBValue(color));
-            //     return 0;
-            // }
             case WM_LBUTTONDOWN: {
                 mouseLeft = true; // Sol tıklama
                 return 0;
@@ -332,15 +336,26 @@ namespace hgr {
                 memDC = CreateCompatibleDC(NULL);
                 memBitmap = CreateCompatibleBitmap(GetDC(hwnd), WIDTH, HEIGHT);
                 SelectObject(memDC, memBitmap);
+
+                delete[] framebuffer; // Eski framebuffer'ı serbest bırak
+                framebuffer = new COLORREF[WIDTH * HEIGHT]; // Yeni framebuffer oluştur
                 clearWindow();
+                
                 return 0;
             }
             case WM_PAINT: {
-                PAINTSTRUCT ps;
-                HDC hdc = BeginPaint(hwnd, &ps);
-                
-                // Bellek DC'den pencereye resmi kopyala
-                BitBlt(hdc, 0, 0, WIDTH, HEIGHT, memDC, 0, 0, SRCCOPY);
+                hdc = BeginPaint(hwnd, &ps);
+
+                bitmapInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+                bitmapInfo.bmiHeader.biWidth = WIDTH;
+                bitmapInfo.bmiHeader.biHeight = -HEIGHT;
+                bitmapInfo.bmiHeader.biPlanes = 1;
+                bitmapInfo.bmiHeader.biBitCount = 32;
+                bitmapInfo.bmiHeader.biCompression = BI_RGB;
+
+                // Framebuffer'ı bitmap'e kopyala
+                SetDIBitsToDevice(hdc, 0, 0, WIDTH, HEIGHT, 0, 0, 0, HEIGHT, framebuffer, &bitmapInfo, DIB_RGB_COLORS);
+
 
                 EndPaint(hwnd, &ps);
                 return 0;
@@ -349,7 +364,7 @@ namespace hgr {
                 if (userUpdateFunc) {
                     clearWindow();
                     userUpdateFunc();
-                    InvalidateRect(hwnd, NULL, FALSE); // ÖNEMLİ! : tamamen silip tekrar çizmek için true, eskileri barındırıp güncellemek için false. kullanıcının yapacağı işe bağlı.
+                    InvalidateRect(hwnd, NULL, TRUE); // ÖNEMLİ! : tamamen silip tekrar çizmek için true, eskileri barındırıp güncellemek için false. kullanıcının yapacağı işe bağlı.
                 }
                 return 0;
             }
@@ -368,14 +383,15 @@ namespace hgr {
     void drawWindow(int width, int height, const char* title, int r, int g, int b, void (*updateFunc)()) {
 
         userUpdateFunc  = updateFunc;
-        
-        DeleteObject(brush);
-        brush = CreateSolidBrush(RGB(r, g, b));
-        
-        memDC = CreateCompatibleDC(NULL);
-        memBitmap = CreateCompatibleBitmap(GetDC(hwnd), width, height);
-        SelectObject(memDC, memBitmap);
 
+        activeRandomSeed();
+
+        bgR = r;
+        bgG = g;
+        bgB = b;
+        DeleteObject(brush);
+        brush = CreateSolidBrush(RGB(bgR, bgG, bgB));
+        
         hInst = GetModuleHandle(NULL); // Uygulama örneğini al
 
         // Pencere sınıfı adı (ANSI)
@@ -412,10 +428,7 @@ namespace hgr {
         WIDTH = width;
         HEIGHT = height;
 
-        // Bellek DC oluştur
-        memDC = CreateCompatibleDC(NULL);
-        memBitmap = CreateCompatibleBitmap(GetDC(hwnd), width, height);
-        SelectObject(memDC, memBitmap);
+        framebuffer = new COLORREF[WIDTH * HEIGHT];
         clearWindow();
 
         
@@ -442,14 +455,16 @@ namespace hgr {
     }
 
     void clearWindow() {
-        RECT rect = {0, 0, WIDTH, HEIGHT};
-        // FillRect(memDC, &rect, (HBRUSH)(COLOR_WINDOW + 1));
-
-        FillRect(memDC, &rect, brush);
+        for (int i = 0; i < WIDTH * HEIGHT; i++) {
+            framebuffer[i] = RGB(bgR, bgG, bgB);
+        }
     }
 
+
     void drawPixel(int x, int y, int r, int g, int b) {
-        SetPixel(memDC, x, y, RGB(r, g, b));
+        if (x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT) {
+            framebuffer[y * WIDTH + x] = RGB(r, g, b);
+        }
     }
 
     void drawLine(int x1, int y1, int x2, int y2, int r, int g, int b) {
@@ -531,7 +546,8 @@ namespace hgr {
             drawLine(points[i][0], points[i][1], points[(i + 1) % pointCount][0], points[(i + 1) % pointCount][1], r, g, b);
         }
     }
-};
+
+}; // hgr namespace
 
 
 
