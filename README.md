@@ -1,5 +1,5 @@
 # hgr
-HGR is a open source, non optimized and basic graphic programming helper for Windows users.
+HGR is a open source, unoptimized and basic graphic programming helper for Windows users.
 <br>
 HGR (Hasan Graphics)
 <br>
