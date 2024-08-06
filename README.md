@@ -6,7 +6,7 @@ HGR (Hasan Graphics)
 <br>
 <h3>Usage:</h3>
 <br>
-Download as zip or use <pre>https://github.com/HasanEfeAksoy/hgr.git</pre> command.
+Download as zip or use <pre>git clone https://github.com/HasanEfeAksoy/hgr.git</pre> command.
 <br>
 <br>
 Include: <pre>#include "hgr.h"</pre>
