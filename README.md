@@ -8,6 +8,7 @@ HGR (Hasan Graphics)
 <br>
 Download as zip or use <pre>https://github.com/HasanEfeAksoy/hgr.git</pre> command.
 <br>
+<br>
 Include: <pre>#include "hgr.h"</pre>
 <br>
 <br>
