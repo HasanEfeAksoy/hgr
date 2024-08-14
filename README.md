@@ -1,40 +1,38 @@
-#HsnCode
-
+# hgr
+HGR is a open source, unoptimized and basic graphic programming helper for Windows users.
 <br>
-<h3>HsnCode is simple text editor. Only dependency is electron.js.</h3>
-<br>
-<br>
-Download: <pre>git clone https://github.com/HasanEfeAksoy/HsnCode.git</pre>
-<br>
-or download as zip.
+HGR (Hasan Graphics)
 <br>
 <br>
+<h3>Usage:</h3>
 <br>
-<h3>$${\color{green}Features:}$$</h3>
-<br>
-<p>$${\color{green}-}$$ Editing selected file</p>
-<br>
-<p>$${\color{green}-}$$ Change text color</p>
-<br>
-<p>$${\color{green}-}$$ Available file explorer</p>
-<br>
-<p>$${\color{green}-}$$ File, Edit, View, About tabs</p>
-<br>
-<p>$${\color{green}-}$$ Changable explorer visibility</p>
-
+Download as zip or use <pre>git clone https://github.com/HasanEfeAksoy/hgr.git</pre> command.
 <br>
 <br>
-
-<h3>$${\color{red}Deficiencies:}$$</h3>
+Include: <pre>#include "hgr.h"</pre>
 <br>
-<p>$${\color{red}-}$$ Only 1 file can be edited at the same time</p>
 <br>
-<p>$${\color{red}-}$$ No word coloring and no changable font size</p>
+Example: 
+<pre>
+    #include &lt iostream &gt
+    #include "hgr.h"
+    <br>
+    <br>
+    void update();
+    <br>
+    int main() {
+      <br>
+      &nbsp &nbsp &nbsp &nbsp hgr::drawWindow(400, 400, "HGR (Hasan Graphics) Window", 0, 0, 0, update);
+      <br>
+      &nbsp &nbsp &nbsp &nbsp return 0;
+      <br>
+    }
+    <br>
+    <br>
+    void update() {
+      <br>
+      &nbsp &nbsp &nbsp &nbsp hgr::drawPixel(100, 100, 255, 255, 255);
+      <br>
+    }
+</pre>
 <br>
-<p>$${\color{red}-}$$ Unable to add/delete files from explorer tab</p>
-<br>
-<p>$${\color{red}-}$$ When you switch to another file, you must save the current file.</p>
-<br>
-<p>$${\color{red}-}$$ If you delete the existing folder in other browsers, no error occurs</p>
-<br>
-<p>$${\color{red}-}$$ If you use too many lines it may lag</p>
