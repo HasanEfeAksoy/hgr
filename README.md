@@ -27,7 +27,7 @@ or download as zip.
 
 <h3>$${\color{red}Deficiencies:}$$</h3>
 <br>
-<p>$${\color{red}-}$$ Only 1 file can be edited</p>
+<p>$${\color{red}-}$$ Only 1 file can be edited at the same time</p>
 <br>
 <p>$${\color{red}-}$$ No word coloring and no changable font size</p>
 <br>
