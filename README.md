@@ -9,8 +9,8 @@ Download: <pre>git clone https://github.com/HasanEfeAksoy/HsnCode.git</pre>
 or download as zip.
 <br>
 <br>
-<h3>$${\color{green}Project Features:}$$</h3>
 <br>
+<h3>$${\color{green}Features:}$$</h3>
 <br>
 <p>$${\color{green}-}$$ Editing selected file</p>
 <br>
@@ -21,15 +21,11 @@ or download as zip.
 <p>$${\color{green}-}$$ File, Edit, View, About tabs</p>
 <br>
 <p>$${\color{green}-}$$ Changable explorer visibility</p>
-<br>
-...
 
 <br>
 <br>
-<br>
 
-<h3>$${\color{red}Deficiencies Of The Project:}$$</h3>
-<br>
+<h3>$${\color{red}Deficiencies:}$$</h3>
 <br>
 <p>$${\color{red}-}$$ Only 1 file can be edited</p>
 <br>
@@ -42,5 +38,3 @@ or download as zip.
 <p>$${\color{red}-}$$ If you delete the existing folder in other browsers, no error occurs</p>
 <br>
 <p>$${\color{red}-}$$ If you use too many lines it may lag</p>
-<br>
-...
