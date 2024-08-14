@@ -1,7 +1,7 @@
 #HsnCode
 
 <br>
-<p>$${\color{blue}HsnCode is simple text editor. Only dependency is electron.js.}$$</p>
+<h3>HsnCode is simple text editor. Only dependency is electron.js.</h3>
 <br>
 <br>
 Download: <pre>git clone https://github.com/HasanEfeAksoy/HsnCode.git</pre>
@@ -22,9 +22,7 @@ or download as zip.
 <br>
 <p>$${\color{green}-}$$ Changable explorer visibility</p>
 <br>
-<p>$${\color{green}-}$$ Code support just for parenthesis</p>
-<br>
-<p>$${\color{green}- ...}$$</p>
+...
 
 <br>
 <br>
@@ -45,4 +43,4 @@ or download as zip.
 <br>
 <p>$${\color{red}-}$$ If you use too many lines it may lag</p>
 <br>
-<p>$${\color{red}- ...}$$</p>
+...
