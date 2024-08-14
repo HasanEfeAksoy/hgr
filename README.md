@@ -1,7 +1,7 @@
 #HsnCode
 
 <br>
-$${\color{blue}HsnCode is simple text editor. Only dependency is electron.js.}$$
+<p>$${\color{blue}HsnCode is simple text editor. Only dependency is electron.js.}$$</p>
 <br>
 <br>
 Download: <pre>git clone https://github.com/HasanEfeAksoy/HsnCode.git</pre>
@@ -12,19 +12,19 @@ or download as zip.
 <h3>$${\color{green}Project Features:}$$</h3>
 <br>
 <br>
-$${\color{green}-}$$ Editing selected file
+<p>$${\color{green}-}$$ Editing selected file</p>
 <br>
-$${\color{green}-}$$ Change text color
+<p>$${\color{green}-}$$ Change text color</p>
 <br>
-$${\color{green}-}$$ Available file explorer
+<p>$${\color{green}-}$$ Available file explorer</p>
 <br>
-$${\color{green}-}$$ File, Edit, View, About tabs
+<p>$${\color{green}-}$$ File, Edit, View, About tabs</p>
 <br>
-$${\color{green}-}$$ Changable explorer visibility
+<p>$${\color{green}-}$$ Changable explorer visibility</p>
 <br>
-$${\color{green}-}$$ Code support just for parenthesis
+<p>$${\color{green}-}$$ Code support just for parenthesis</p>
 <br>
-$${\color{green}- ...}$$
+<p>$${\color{green}- ...}$$</p>
 
 <br>
 <br>
@@ -33,16 +33,16 @@ $${\color{green}- ...}$$
 <h3>$${\color{red}Deficiencies Of The Project:}$$</h3>
 <br>
 <br>
-$${\color{red}-}$$ Only 1 file can be edited
+<p>$${\color{red}-}$$ Only 1 file can be edited</p>
 <br>
-$${\color{red}-}$$ No word coloring and no changable font size
+<p>$${\color{red}-}$$ No word coloring and no changable font size</p>
 <br>
-$${\color{red}-}$$ Unable to add/delete files from explorer tab
+<p>$${\color{red}-}$$ Unable to add/delete files from explorer tab</p>
 <br>
-$${\color{red}-}$$ When you switch to another file, you must save the current file.
+<p>$${\color{red}-}$$ When you switch to another file, you must save the current file.</p>
 <br>
-$${\color{red}-}$$ If you delete the existing folder in other browsers, no error occurs
+<p>$${\color{red}-}$$ If you delete the existing folder in other browsers, no error occurs</p>
 <br>
-$${\color{red}-}$$ If you use too many lines it may lag
+<p>$${\color{red}-}$$ If you use too many lines it may lag</p>
 <br>
-$${\color{red}- ...}$$
+<p>$${\color{red}- ...}$$</p>
